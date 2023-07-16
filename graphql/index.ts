@@ -21,7 +21,7 @@ export const createUserMutation = `
                 avatarUrl
                 description
                 githubUrl
-                linkedIndUrl
+                linkedInUrl
                 id
             }
         }
