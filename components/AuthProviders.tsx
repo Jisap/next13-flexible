@@ -30,10 +30,10 @@ const AuthProviders = () => {
   if(providers){
     return (
       <div>
-        {Object.values(providers).map((provider: Provider, i) => (
+        {Object.values(providers).map((provider: Provider, i) => ( 
           <button 
             key={i}
-            onClick={() => signIn(provider?.id)}  
+            onClick={() => signIn(provider?.id)}  // Google devolverá un user autenticado que será el usado en sessions.ts
           >{ provider.id }
           </button>  
         ))}

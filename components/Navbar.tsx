@@ -7,7 +7,7 @@ import { getCurrentUser } from '@/lib/session';
 
 const Navbar = async() => {
 
-  const session = await getCurrentUser();
+  const session = await getCurrentUser(); // getCurrentUser -> getSession -> user|null -> Avatar | boton de signIn
 
   return (
     <nav className='flexBetween navbar'>
