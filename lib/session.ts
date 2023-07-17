@@ -70,17 +70,17 @@ export const authOptions: NextAuthOptions = {
                     )
                 }
                 //return true if they exis or were created
-                return true
+                return true  
             } catch (error:any) {
                 console.log(error)
                 return false
-            }
-        }
+            } 
+        }// Si el return es true el flujo continua y se ejecuta el cb session -> crea session con info actualizada
 
     }
 }
 
 export async function getCurrentUser() {
-    const session = await getServerSession(authOptions) as SessionInterface;
-    return session;
+    const session = await getServerSession(authOptions) as SessionInterface; // Actualizada la session esta func del
+    return session;                                                          // Navbar se invoca       
 }
