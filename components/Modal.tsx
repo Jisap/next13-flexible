@@ -32,7 +32,7 @@ export default function Modal({ children }: { children: ReactNode }) {
             <Image src="/close.svg" width={17} height={17} alt="close" />
         </button>
 
-        <div ref={wrapper}>
+        <div ref={wrapper} className="modal_wrapper">
             { children }
         </div>
     </div>
