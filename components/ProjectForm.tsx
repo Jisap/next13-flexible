@@ -23,11 +23,14 @@ type Props = {
 const ProjectForm = ({ type, session }:Props) => {
   
   const handleFormSubmit = (e:FormEvent) => {}
-  const handleChangeImage = ( e:ChangeEvent<HTMLInputElement>) =>{}
+  const handleChangeImage = ( e:ChangeEvent<HTMLInputElement>) => {}
+  const handleStateChange = (fieldName: string, value: string) => {}
   
   const form = {
-    image:''
+    image:'',
+    title:'',
   }
+
   return (
     
     <form
@@ -56,7 +59,12 @@ const ProjectForm = ({ type, session }:Props) => {
       )}
      </div>
 
-      
+      <FormField 
+        title="Title"
+        state={form.title}
+        placeholder="Flexible"
+        setState={(value) => handleStateChange('title', value)}
+      />
 
     </form>
   )
