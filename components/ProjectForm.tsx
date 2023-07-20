@@ -11,6 +11,7 @@ import { categoryFilters } from '@/constants';
 //import { updateProject, createNewProject, fetchToken } from '@/lib/action';
 import { FormState, ProjectInterface, SessionInterface } from '@/common.types';
 import FormField from './FormField';
+import { createNewProject, fetchToken } from '@/lib/action';
 
 
 type Props = {
@@ -21,15 +22,63 @@ type Props = {
 
 
 const ProjectForm = ({ type, session }:Props) => {
+
+  const router = useRouter();
+
   
-  const handleFormSubmit = (e:FormEvent) => {}
-  const handleChangeImage = ( e:ChangeEvent<HTMLInputElement>) => {}
-  const handleStateChange = (fieldName: string, value: string) => {}
+
+  const [submitting, setSubmitting] = useState<boolean>(false);
+
+  const [form, setForm] = useState<FormState>({
+    title: "",
+    description: "",
+    image: "",
+    liveSiteUrl: "",
+    githubUrl: "",
+    category: ""
+  })
+
   
-  const form = {
-    image:'',
-    title:'',
+  const handleFormSubmit = async(e:FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    const { token } = await fetchToken();
+
+    try {
+      if (type === "create") {
+        await createNewProject(form, session?.user?.id, token)
+        router.push("/")
+      }
+    } catch (error) {
+      
+    }
   }
+
+
+  const handleChangeImage = ( e:ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const file = e.target.files?.[0];
+
+    if(!file) return;
+
+    if(!file.type.includes('image')){
+      return alert('Please upload an image file');
+    }
+
+    const reader = new FileReader(); // Instancia lector
+
+    reader.readAsDataURL(file);      // leemos el contenido del file como una url de datos
+
+    reader.onload = () => {
+      const result = reader.result as string; // Cuando la lectura del archivo se completa, se obtiene la URL de datos como una cadena (lugar del pc donde se ubica la imagen)
+      handleStateChange("image", result);     // Modifica el estado de Form
+    };
+  };
+  
+  const handleStateChange = (fieldName: string, value: string) => { // Añade al estado del form el nuevo valor del campo que cambia
+    setForm((prevState) => ({...prevState, [fieldName]:value}))
+  };
 
   return (
     
@@ -65,6 +114,49 @@ const ProjectForm = ({ type, session }:Props) => {
         placeholder="Flexible"
         setState={(value) => handleStateChange('title', value)}
       />
+
+      <FormField
+        title='Description'
+        state={form.description}
+        placeholder="Showcase and discover remarkable developer projects."
+        isTextArea
+        setState={(value) => handleStateChange('description', value)}
+      />
+
+      <FormField
+        type="url"
+        title="Website URL"
+        state={form.liveSiteUrl}
+        placeholder="https://jsmastery.pro"
+        setState={(value) => handleStateChange('liveSiteUrl', value)}
+      />
+
+      <FormField
+        type="url"
+        title="GitHub URL"
+        state={form.githubUrl}
+        placeholder="https://github.com/adrianhajdin"
+        setState={(value) => handleStateChange('githubUrl', value)}
+      />
+
+      <CustomMenu
+        title="Category"
+        state={form.category}
+        filters={categoryFilters}
+        setState={(value) => handleStateChange('category', value)}
+      />
+
+      <div className="flexStart w-full">
+        <Button
+          title={submitting                                   // Si submitting es verdadera:
+            ? `${type === "create" ? "Creating" : "Editing"}` // Si type = "create", el título del botón será "Creating". Si el type es diferente pondrá Editing
+            : `${type === "create" ? "Create" : "Edit"}`      // Si submitting = falso y el type = "create el título será "Create". Si el type es diferente pondrá Edit.
+          }
+          type="submit"
+          leftIcon={submitting ? "" : "/plus.svg"}
+          submitting={submitting}
+        />
+      </div>
 
     </form>
   )
