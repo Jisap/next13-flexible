@@ -1,5 +1,5 @@
 import { GraphQLClient } from "graphql-request";
-import { createProjectMutation, createUserMutation, getUserQuery } from "@/graphql";
+import { createProjectMutation, createUserMutation, getUserQuery, projectsQuery } from "@/graphql";
 import { ProjectForm } from "@/common.types";
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -9,12 +9,11 @@ const serverUrl = isProduction ? process.env.NEXT_PUBLIC_SERVER_URL : 'http://lo
 
 const client = new GraphQLClient( apiUrl ); //1
 
-const makeGraphQLRequest = async( query: string, variables ={} ) => { //2
+const makeGraphQLRequest = async( query: string, variables = {} ) => { //2
 
     try {
         return await client.request( query, variables )
     } catch (error) {
-        console.log(error)
         throw error
     }
 }
@@ -77,4 +76,11 @@ export const fetchToken = async () => {
     } catch (err) {
         throw err;
     }
+};
+
+export const fetchAllProjects = (category?: string | null , endcursor?: string | null) => {
+    console.log("category", category)
+    client.setHeader("x-api-key", apiKey);
+
+    return makeGraphQLRequest(projectsQuery, { category, endcursor });
 };
