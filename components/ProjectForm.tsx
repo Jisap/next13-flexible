@@ -49,7 +49,6 @@ const ProjectForm = ({ type, session, project }:Props) => {
       }
       if (type === "edit") {
         await updateProject(form, project?.id as string, token)
-
         router.push("/")
       }
     } catch (error) {
@@ -75,7 +74,7 @@ const ProjectForm = ({ type, session, project }:Props) => {
     reader.readAsDataURL(file);      // leemos el contenido del file como una url de datos
 
     reader.onload = () => {
-      const result = reader.result as string; // Cuando la lectura del archivo se completa, se obtiene la URL de datos como una cadena (lugar del pc donde se ubica la imagen)
+      const result = reader.result as string; // Cuando la lectura del archivo se completa, se obtiene la URL de datos (url con la imagen codificada indicando su ubicación)
       handleStateChange("image", result);     // Modifica el estado de Form
     };
   };

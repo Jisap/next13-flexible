@@ -107,24 +107,24 @@ export const updateProject = async (form: ProjectForm, projectId: string, token:
         return base64Regex.test(value);
     }
 
-    let updatedForm = { ...form };
+    let updatedForm = { ...form };                           // Copia del formulario existente
 
-    const isUploadingNewImage = isBase64DataURL(form.image);
+    const isUploadingNewImage = isBase64DataURL(form.image); // Comprobamos si la imagen esta siendo cargada en el formulario como una url de datos
 
     if (isUploadingNewImage) {
-        const imageUrl = await uploadImage(form.image);
+        const imageUrl = await uploadImage(form.image);      // Esta nueva imagen se sube a cloudinary    
 
         if (imageUrl.url) {
-            updatedForm = { ...updatedForm, image: imageUrl.url };
+            updatedForm = { ...updatedForm, image: imageUrl.url }; // y con ella se actualiza la copia del formulario
         }
     }
 
-    client.setHeader("Authorization", `Bearer ${token}`);
+    client.setHeader("Authorization", `Bearer ${token}`);          // Establecemos si tenemos autenticación (usuario logueado)
 
-    const variables = {
+    const variables = {                                            // Establecemos el contenido a actualizar
         id: projectId,
         input: updatedForm,
     };
 
-    return makeGraphQLRequest(updateProjectMutation, variables);
+    return makeGraphQLRequest(updateProjectMutation, variables);    // Actualizamos en Bd el formulario
 };
