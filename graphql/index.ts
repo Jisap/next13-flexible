@@ -92,3 +92,50 @@ export const getProjectByIdQuery = `
     }
   }
 `;
+
+export const getProjectsOfUserQuery = `
+  query getUserProjects($id: ID!, $last: Int = 4) {
+    user(by: { id: $id }) {
+      id
+      name
+      email
+      description
+      avatarUrl
+      githubUrl
+      linkedInUrl
+      projects(last: $last) {
+        edges {
+          node {
+            id
+            title
+            image
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const deleteProjectMutation = `
+  mutation DeleteProject($id: ID!) {
+    projectDelete(by: { id: $id }) {
+      deletedId
+    }
+  }
+`;
+
+export const updateProjectMutation = `
+	mutation UpdateProject($id: ID!, $input: ProjectUpdateInput!) {
+		projectUpdate(by: { id: $id }, input: $input) {
+			project {
+				id
+				title
+				description
+				createdBy {
+					email
+					name
+				}
+			}
+		}
+	}
+`;

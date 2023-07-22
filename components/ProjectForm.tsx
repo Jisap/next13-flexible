@@ -2,16 +2,16 @@
 
 import Image from 'next/image';
 import React, { ChangeEvent, FormEvent, useState } from 'react'
-import { useRouter, redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 
+import FormField from './FormField';
 import Button from './Button';
 import CustomMenu from './CustomMenu';
 import { categoryFilters } from '@/constants';
 //import { updateProject, createNewProject, fetchToken } from '@/lib/action';
 import { FormState, ProjectInterface, SessionInterface } from '@/common.types';
-import FormField from './FormField';
-import { createNewProject, fetchToken } from '@/lib/action';
+import { createNewProject, fetchToken, updateProject } from '@/lib/action';
 
 
 type Props = {
@@ -21,24 +21,21 @@ type Props = {
 }
 
 
-const ProjectForm = ({ type, session }:Props) => {
+const ProjectForm = ({ type, session, project }:Props) => {
 
   const router = useRouter();
-
-  
 
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   const [form, setForm] = useState<FormState>({
-    title: "",
-    description: "",
-    image: "",
-    liveSiteUrl: "",
-    githubUrl: "",
-    category: ""
+    title: project?.title || "",
+    description: project?.description || "",
+    image: project?.image || "",
+    liveSiteUrl: project?.liveSiteUrl || "",
+    githubUrl: project?.githubUrl || "",
+    category: project?.category || ""
   })
 
-  
   const handleFormSubmit = async(e:FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
@@ -50,8 +47,15 @@ const ProjectForm = ({ type, session }:Props) => {
         await createNewProject(form, session?.user?.id, token)
         router.push("/")
       }
+      if (type === "edit") {
+        await updateProject(form, project?.id as string, token)
+
+        router.push("/")
+      }
     } catch (error) {
-      
+      alert(`Failed to ${type === "create" ? "create" : "edit"} a project. Try again!`);
+    }finally{
+      setSubmitting(false)
     }
   }
 
@@ -77,7 +81,7 @@ const ProjectForm = ({ type, session }:Props) => {
   };
   
   const handleStateChange = (fieldName: string, value: string) => { // Añade al estado del form el nuevo valor del campo que cambia
-    setForm((prevState) => ({...prevState, [fieldName]:value}))
+    setForm((prevForm) => ({...prevForm, [fieldName]:value}))
   };
 
   return (
