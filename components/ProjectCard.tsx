@@ -29,7 +29,7 @@ const ProjectCard = ({ id, image, title, name, avatarUrl, userId }: Props) => {
             <Image
                 src={image}
                 width={414}
-                height={314}
+                height={414}
                 className="w-full h-full object-cover rounded-2xl"
                 alt="project image"
             />
