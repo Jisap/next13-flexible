@@ -78,11 +78,11 @@ export const fetchToken = async () => {
     }
 };
 
-export const fetchAllProjects = (category?: string | null) => {
+export const fetchAllProjects = (category?: string | null, endcursor?: string | null) => {
     console.log("category", category)
     client.setHeader("x-api-key", apiKey);
 
-    return makeGraphQLRequest(projectsQuery, { category });
+    return makeGraphQLRequest(projectsQuery, { category, endcursor });
 };
 
 export const getProjectDetails = (id: string) => {
