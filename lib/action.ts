@@ -128,3 +128,4 @@ export const updateProject = async (form: ProjectForm, projectId: string, token:
 
     return makeGraphQLRequest(updateProjectMutation, variables);    // Actualizamos en Bd el formulario
 };
+
